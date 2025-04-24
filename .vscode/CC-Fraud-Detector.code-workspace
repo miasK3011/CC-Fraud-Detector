@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ]
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "csstools.postcss",
+      "bradlc.vscode-tailwindcss",
+      "VisualStudioExptTeam.vscodeintellicode",
+      "vunguyentuan.vscode-css-variables"
+    ]
+  }
+}
