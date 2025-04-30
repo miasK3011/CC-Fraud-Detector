@@ -2,15 +2,16 @@
 
 > Aplicação Web e modelo de IA visando a detecção de transações fraudulentas em cartões de crédito.
 
-### Ajustes e melhorias
+Modelos e notebooks python estão na pasta Backend.
 
-O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas para as seguintes tarefas:
+## Instalar dependências do Backend
 
-- [ ] Design do sistema
-- [ ] Treinamento do modelo
-- [ ] Implementação do Backend junto ao modelo de IA
-- [ ] Implementação do FrontEnd
-- [ ] Deploy da aplicação
+- Necessário Python 3.10.x ou superior
+
+Para instalar as dependências necessárias.
+````
+pip install -r requirements.txt
+````
 
 ## 📝 Licença
 
