@@ -1,0 +1,21 @@
+# Diretórios
+__pycache__/
+.venv/
+venv/
+.env/
+env/
+notebooks/
+train_models/
+dataset/creditcard.csv
+dataset/train_dataset.csv
+.git/
+.github/
+
+# Arquivos de desenvolvimento
+*.pyc
+.DS_Store
+.env.local
+.env.development
+*.log
+.coverage
+.ipynb_checkpoints/
