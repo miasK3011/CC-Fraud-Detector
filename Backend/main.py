@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-dataset = pd.read_csv("dataset/train_dataset.csv", dtype=float)
+dataset = pd.read_csv("dataset/test_dataset.csv", dtype=float)
 fraud_samples = dataset[dataset["Class"] == 1].sample(n=5, random_state=42)
 non_fraud_samples = dataset[dataset["Class"] == 0].sample(n=5, random_state=42)
 selected_samples = pd.concat([fraud_samples, non_fraud_samples])
