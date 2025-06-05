@@ -11,6 +11,7 @@ interface PredictFormValues {
 interface PredictFormProps {
   features: number[];
   setPrediction: (prediction: any) => void;
+  model?: string;
 }
 
 export default function PredictForm({
@@ -24,7 +25,6 @@ export default function PredictForm({
   });
 
   useEffect(() => {
-    console.log("Features recebidas no PredictForm:", features);
     form.setValues({ features });
   }, [features]);
 
@@ -64,7 +64,10 @@ export default function PredictForm({
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)} className="flex gap-4">
+    <form
+      onSubmit={form.onSubmit(handleSubmit)}
+      className="flex gap-4 mt-[6px]"
+    >
       <Button type="submit">Predict</Button>
     </form>
   );

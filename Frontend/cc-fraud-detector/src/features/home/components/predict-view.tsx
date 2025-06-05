@@ -1,17 +1,11 @@
 "use client";
-import {
-  Alert,
-  Badge,
-  Card,
-  CardSection,
-  Select,
-  Table,
-  Text,
-} from "@mantine/core";
+import { Alert, Select, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { getDatasetById } from "../api/client/get-dataset";
 import { Dataset, DatasetOptions, PredictionResponse } from "../types";
 import PredictForm from "./predict-form";
+import PredicResults from "./predict-results";
+import PredictTabs from "./predict-tabs";
 
 export default function PredictView({ options }: { options: DatasetOptions }) {
   const [selectedOption, setSelectedOption] = useState<string | null>(
@@ -21,6 +15,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse>();
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string | null>("rf");
 
   useEffect(() => {
     if (selectedOption) {
@@ -45,6 +40,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
   };
 
   const handleChange = async (value: string | null) => {
+    setPrediction(undefined);
     if (value !== null) {
       setSelectedOption(value);
       await loadDataset(value);
@@ -66,129 +62,31 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
 
   return (
     <>
-      <div className="flex gap-4 mb-4 items-center">
-        <Select
-          label="Selecione um dataset"
-          placeholder="Escolha uma opção"
-          data={options}
-          value={selectedOption}
-          onChange={handleChange}
-          allowDeselect={false}
-          mb="lg"
-          className="w-full"
-        />
-        <PredictForm
-          features={dataset?.dataset.value || []}
-          setPrediction={setPrediction}
-        />
-      </div>
-      <div className="flex gap-4 h-full">
-        {dataset && (
-          <Card shadow="xs" padding="md" radius="md" withBorder>
-            <Text fw={700} fz="lg" mb="md">
-              Informações da Transação
-            </Text>
-            <div className="flex items-center justify-between gap-2 mb-4">
-              <Text>ID: {dataset.dataset.id || "N/A"}</Text>
-              <Badge
-                color={dataset.dataset.is_fraud ? "red" : "green"}
-                variant="light"
-              >
-                {dataset.dataset.is_fraud !== undefined
-                  ? dataset.dataset.is_fraud
-                    ? "Fraude"
-                    : "Não fraude"
-                  : "Dados incompletos"}
-              </Badge>
-            </div>
-            <Table.ScrollContainer minWidth={300} maxHeight={320}>
-              <Table striped highlightOnHover>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Feature</Table.Th>
-                    <Table.Th>Valor</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {dataset.dataset.value.slice(0, 28).map((item, index) => (
-                    <Table.Tr key={index}>
-                      <Table.Td>V{index + 1}</Table.Td>
-                      <Table.Td>{item.toString()}</Table.Td>
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            </Table.ScrollContainer>
-          </Card>
-        )}
-
-        <div className="w-full flex-1">
+      <div className="flex flex-col mb-4 items-center">
+        <div className="flex items-center w-full gap-4">
+          <Select
+            label="Selecione um dataset"
+            placeholder="Escolha uma opção"
+            data={options}
+            value={selectedOption}
+            onChange={handleChange}
+            allowDeselect={false}
+            mb="lg"
+            className="w-full"
+          />
+          <PredictForm
+            features={dataset?.dataset.value || []}
+            setPrediction={setPrediction}
+          />
+        </div>
+        <div className="w-full">
+          <PredictTabs setActiveTab={setActiveTab} activeTab={activeTab} />
           {prediction ? (
-            <div className="flex flex-col gap-4">
-              <Card
-                shadow="xs"
-                padding="md"
-                radius="md"
-                withBorder
-                className="w-full"
-              >
-                <CardSection p={"md"}>
-                  <Text fw={700} fz="lg" mb="md">
-                    Resultado da Detecção
-                  </Text>
-                </CardSection>
-                <div
-                  className={`flex items-center justify-center mb-4 p-4 ${
-                    prediction.is_fraud ? "bg-red-200" : "bg-green-200"
-                  } rounded-md`}
-                >
-                  <Text
-                    size="72px"
-                    c={prediction.is_fraud ? "red" : "green"}
-                    className="text-center"
-                  >
-                    {prediction.is_fraud ? "Fraude" : "Não Fraude"}
-                  </Text>
-                </div>
-                <Text className="text-center mb-4">
-                  A transação possui {prediction.fraud_probability.toFixed(0)}%
-                  de chance de ser fraude.
-                </Text>
-              </Card>
-              <Card
-                shadow="xs"
-                padding="md"
-                radius="md"
-                withBorder
-                className="w-full"
-              >
-                <CardSection className="p-4">
-                  <Text fw={700} fz={"lg"}>
-                    Informações sobre o modelo
-                  </Text>
-                </CardSection>
-                <Text>
-                  <strong>Classificador:</strong> Random Forest <br />
-                  <strong>Recall</strong> 80% <br />
-                  <strong>Precisão</strong> 70% <br />
-                  <strong>F1-Score</strong> 75% <br />
-                  <strong>AUC-Roc</strong> 97% <br />
-                </Text>
-              </Card>
-            </div>
+            <PredicResults dataset={dataset} prediction={prediction} />
           ) : (
-            <Card
-              shadow="xs"
-              padding="md"
-              radius="md"
-              withBorder
-              className="w-full h-full"
-            >
-              <Text fw={700} fz="lg" mb="md">
-                Resultado da Detecção
-              </Text>
-              <Text>Escolha um teste para ver o resultado.</Text>
-            </Card>
+            <Text>
+              Selecione um dataset e clique em prever para ver os resultados.
+            </Text>
           )}
         </div>
       </div>
