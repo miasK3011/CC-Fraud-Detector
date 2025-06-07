@@ -1,8 +1,9 @@
 "use client";
+import { useApiMutation } from "@hooks/useApiMutation";
 import { Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
 import { useEffect } from "react";
+import { PredictionResponse } from "../types"; // Importe o tipo correto
 
 interface PredictFormValues {
   features: number[];
@@ -10,18 +11,24 @@ interface PredictFormValues {
 
 interface PredictFormProps {
   features: number[];
-  setPrediction: (prediction: any) => void;
-  model?: string;
+  setPrediction: (prediction: PredictionResponse | null) => void;
+  onError: (error: string | null) => void;
+  model: string;
 }
 
 export default function PredictForm({
   features,
   setPrediction,
+  onError,
+  model,
 }: PredictFormProps) {
+  const { mutate, isLoading } = useApiMutation<
+    PredictionResponse,
+    { features: number[] }
+  >();
+
   const form = useForm<PredictFormValues>({
-    initialValues: {
-      features: features,
-    },
+    initialValues: { features },
   });
 
   useEffect(() => {
@@ -29,46 +36,31 @@ export default function PredictForm({
   }, [features]);
 
   const handleSubmit = async (values: PredictFormValues) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/predict/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            features: values.features,
-          }),
-        }
-      );
+    setPrediction(null);
+    onError(null);
 
-      if (response.ok) {
-        const prediction = await response.json();
-        setPrediction(prediction);
-      } else {
-        notifications.show({
-          title: "Error",
-          message: "Failed to fetch prediction: " + response.statusText,
-          color: "red",
-        });
+    await mutate(
+      `/predict/${model}/undersampling/`,
+      { features: values.features },
+      {
+        onSuccess: (data) => {
+          setPrediction(data);
+        },
+        onError: (err) => {
+          onError(err.detail || "Ocorreu um erro na predição.");
+        },
       }
-    } catch (error) {
-      console.error("Error during prediction:", error);
-      notifications.show({
-        title: "Error",
-        message: "An error occurred during prediction.",
-        color: "red",
-      });
-    }
+    );
   };
 
   return (
     <form
       onSubmit={form.onSubmit(handleSubmit)}
-      className="flex gap-4 mt-[6px]"
+      className="flex items-start gap-4 mt-8"
     >
-      <Button type="submit">Predict</Button>
+      <Button type="submit" loading={isLoading}>
+        Prever
+      </Button>
     </form>
   );
 }

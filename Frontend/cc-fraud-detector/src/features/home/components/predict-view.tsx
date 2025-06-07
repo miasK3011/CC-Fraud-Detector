@@ -13,9 +13,22 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
   );
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
-  const [prediction, setPrediction] = useState<PredictionResponse>();
+  const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>("rf");
+
+  const model = (activeTab: string | null) => {
+    switch (activeTab) {
+      case "rf":
+        return "random-forest";
+      case "xgb":
+        return "xgb";
+      case "lgbm":
+        return "lgbm";
+      default:
+        return "rf";
+    }
+  };
 
   useEffect(() => {
     if (selectedOption) {
@@ -27,41 +40,38 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
     try {
       setError(null);
       const result = await getDatasetById(value);
-
       if (result) {
         setDataset(result);
       } else {
         setError("Não foi possível carregar o dataset");
       }
     } catch (err) {
-      console.error("Erro ao carregar o dataset:", err);
       setError("Erro ao carregar o dataset");
     }
   };
 
   const handleChange = async (value: string | null) => {
-    setPrediction(undefined);
+    setPrediction(null);
+    setError(null);
     if (value !== null) {
       setSelectedOption(value);
       await loadDataset(value);
     }
   };
 
-  if (error) {
-    return (
-      <Alert
-        title="Erro"
-        color="red"
-        withCloseButton
-        onClose={() => setError(null)}
-      >
-        {error}
-      </Alert>
-    );
-  }
-
   return (
     <>
+      {error && (
+        <Alert
+          title="Erro"
+          color="red"
+          withCloseButton
+          onClose={() => setError(null)}
+          mb="md"
+        >
+          {error}
+        </Alert>
+      )}
       <div className="flex flex-col mb-4 items-center">
         <div className="flex items-center w-full gap-4">
           <Select
@@ -71,20 +81,21 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
             value={selectedOption}
             onChange={handleChange}
             allowDeselect={false}
-            mb="lg"
             className="w-full"
           />
           <PredictForm
             features={dataset?.dataset.value || []}
             setPrediction={setPrediction}
+            onError={setError}
+            model={model(activeTab)}
           />
         </div>
-        <div className="w-full">
+        <div className="w-full mt-4">
           <PredictTabs setActiveTab={setActiveTab} activeTab={activeTab} />
           {prediction ? (
             <PredicResults dataset={dataset} prediction={prediction} />
           ) : (
-            <Text>
+            <Text mt="md">
               Selecione um dataset e clique em prever para ver os resultados.
             </Text>
           )}
