@@ -2,10 +2,17 @@
 import { Alert, Select, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { getDatasetById } from "../api/client/get-dataset";
-import { Dataset, DatasetOptions, PredictionResponse } from "../types";
+import { Dataset, DatasetOptions, Model, PredictionResponse } from "../types";
 import PredictForm from "./predict-form";
 import PredicResults from "./predict-results";
 import PredictTabs from "./predict-tabs";
+
+const modelPaths: Record<Model, string> = {
+  "rf-under": "random-forest/undersampling",
+  "rf-over": "random-forest/oversampling",
+  lgbm: "lgbm",
+  xgb: "xgb",
+};
 
 export default function PredictView({ options }: { options: DatasetOptions }) {
   const [selectedOption, setSelectedOption] = useState<string | null>(
@@ -15,20 +22,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string | null>("rf");
-
-  const model = (activeTab: string | null) => {
-    switch (activeTab) {
-      case "rf":
-        return "random-forest";
-      case "xgb":
-        return "xgb";
-      case "lgbm":
-        return "lgbm";
-      default:
-        return "rf";
-    }
-  };
+  const [activeTab, setActiveTab] = useState<Model>("rf-under");
 
   useEffect(() => {
     if (selectedOption) {
@@ -87,7 +81,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
             features={dataset?.dataset.value || []}
             setPrediction={setPrediction}
             onError={setError}
-            model={model(activeTab)}
+            model={modelPaths[activeTab]}
           />
         </div>
         <div className="w-full mt-4">

@@ -40,7 +40,7 @@ export default function PredictForm({
     onError(null);
 
     await mutate(
-      `/predict/${model}/undersampling/`,
+      `/predict/${model}/`,
       { features: values.features },
       {
         onSuccess: (data) => {
@@ -56,10 +56,10 @@ export default function PredictForm({
   return (
     <form
       onSubmit={form.onSubmit(handleSubmit)}
-      className="flex items-start gap-4 mt-8"
+      className="mt-6"
     >
       <Button type="submit" loading={isLoading}>
-        Prever
+        Detectar
       </Button>
     </form>
   );

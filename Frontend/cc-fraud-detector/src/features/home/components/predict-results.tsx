@@ -104,11 +104,11 @@ export default function PredicResults({
                 </Text>
               </CardSection>
               <Text>
-                <strong>Classificador:</strong> Random Forest <br />
-                <strong>Recall</strong> 80% <br />
-                <strong>Precisão</strong> 70% <br />
-                <strong>F1-Score</strong> 75% <br />
-                <strong>AUC-Roc</strong> 97% <br />
+                <strong>Classificador:</strong> {prediction.model_name} <br />
+                <strong>Recall</strong> {prediction.recall * 100}% <br />
+                <strong>Precisão</strong> {prediction.precision * 100}% <br />
+                <strong>F1-Score</strong> {prediction.f1_score * 100}% <br />
+                <strong>AUC-Roc</strong> {prediction.auc_roc * 100}% <br />
               </Text>
             </Card>
           </div>
