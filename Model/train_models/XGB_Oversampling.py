@@ -10,13 +10,18 @@ train_dataset = pd.read_csv("./dataset/train_dataset.csv", dtype=float)
 X_train = train_dataset.drop(columns=["Class"])
 y_train = train_dataset["Class"]
 
+best_params = {
+    'learning_rate': 0.1, 
+    'max_depth': 5, 
+    'min_child_weight': 1, 
+    'n_estimators': 300
+}
+
 rus = SMOTE(random_state=42)
 X_train_resampled, y_train_resampled = rus.fit_resample(X_train, y_train)
 
 base_model = XGBClassifier(
-    n_estimators=50,
-    random_state=42,
-    max_depth=10,
+    random_state=42, use_label_encoder=False, eval_metric='logloss', **best_params
 )
 
 base_model.fit(X_train_resampled, y_train_resampled)

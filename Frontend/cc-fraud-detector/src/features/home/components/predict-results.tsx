@@ -11,7 +11,7 @@ export default function PredicResults({
   prediction,
 }: PredictResultsProps) {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 h-full">
       {dataset && (
         <Card shadow="xs" padding="md" radius="md" withBorder>
           <Text fw={700} fz="lg" mb="md">
@@ -30,7 +30,7 @@ export default function PredicResults({
                 : "Dados incompletos"}
             </Badge>
           </div>
-          <Table.ScrollContainer minWidth={300} maxHeight={320}>
+          <Table.ScrollContainer minWidth={300} maxHeight={450}>
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>

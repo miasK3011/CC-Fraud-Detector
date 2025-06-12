@@ -10,8 +10,8 @@ import PredictTabs from "./predict-tabs";
 const modelPaths: Record<Model, string> = {
   "rf-under": "random-forest/undersampling",
   "rf-over": "random-forest/oversampling",
-  lgbm: "lgbm",
-  xgb: "xgb",
+  "xgb-under": "xgb/undersampling",
+  "xgb-over": "xgb/oversampling",
 };
 
 export default function PredictView({ options }: { options: DatasetOptions }) {
@@ -54,7 +54,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
   };
 
   return (
-    <>
+    <div className="h-full">
       {error && (
         <Alert
           title="Erro"
@@ -76,6 +76,7 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
             onChange={handleChange}
             allowDeselect={false}
             className="w-full"
+            classNames={{wrapper: "shadow-sm"}}
           />
           <PredictForm
             features={dataset?.dataset.value || []}
@@ -95,6 +96,6 @@ export default function PredictView({ options }: { options: DatasetOptions }) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

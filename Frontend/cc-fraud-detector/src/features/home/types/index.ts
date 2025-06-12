@@ -6,7 +6,7 @@ export interface Dataset {
   }
 }
 
-export type Model = "rf-under" | "rf-over" | "lgbm" | "xgb";
+export type Model = "rf-under" | "rf-over" | "xgb-under" | "xgb-over";
 
 export interface DatasetsResponse {
   datasets: { id: number; label: string }[];

@@ -58,7 +58,7 @@ export default function PredictForm({
       onSubmit={form.onSubmit(handleSubmit)}
       className="mt-6"
     >
-      <Button type="submit" loading={isLoading}>
+      <Button type="submit" loading={isLoading} className="shadow-md">
         Detectar
       </Button>
     </form>

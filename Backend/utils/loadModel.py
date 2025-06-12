@@ -1,9 +1,10 @@
 import pickle
 
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 
 
-def loadModel(path: str) -> RandomForestClassifier:
+def loadModel(path: str) -> RandomForestClassifier | XGBClassifier:
     try:
         with open(path, "rb") as file:
             loaded_model = pickle.load(file)

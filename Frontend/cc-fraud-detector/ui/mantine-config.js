@@ -224,7 +224,7 @@ export const theme = createTheme({
     light: 6,
     dark: 8,
   },
-  primaryColor: "grape",
+  primaryColor: "blue",
   autoContrast: false,
   luminanceThreshold: 0.3,
   fontFamily:

@@ -20,10 +20,12 @@ export default function PredictTabs({
       <Text fw={700} fz="xl">
         Modelos disponíveis
       </Text>
-      <Tabs className="mb-4" value={activeTab} onChange={handleTabChange} variant="outline">
+      <Tabs className="mb-4" value={activeTab} onChange={handleTabChange} variant="pills">
         <Tabs.List>
           <Tabs.Tab value="rf-under">Random Forest Undersampling</Tabs.Tab>
           <Tabs.Tab value="rf-over">Random Forest SMOTE</Tabs.Tab>
+          <Tabs.Tab value="xgb-under">XGBoost Undersampling</Tabs.Tab>
+          <Tabs.Tab value="xgb-over">XGBoost Oversampling</Tabs.Tab>
         </Tabs.List>
       </Tabs>
     </>
